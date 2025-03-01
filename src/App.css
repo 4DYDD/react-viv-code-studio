@@ -1,23 +1,18 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
 .flexc {
-  @apply flex justify-center items-center;
+  @apply flex items-center justify-center;
 }
-
 .transcenter {
-  @apply absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2;
+  @apply absolute -translate-x-1/2 -translate-y-1/2 left-1/2 top-1/2;
 }
-
 .transcenter-r {
-  @apply absolute right-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2;
+  @apply absolute -translate-x-1/2 -translate-y-1/2 right-1/2 top-1/2;
 }
-
 .transall {
   @apply transition-all duration-100 ease-in-out;
 }
-
 @keyframes pingku {
   75%,
   100% {
@@ -28,7 +23,6 @@
 .animate-pingku {
   animation: pingku 0.5s cubic-bezier(0, 0, 0.2, 1) infinite;
 }
-
 @keyframes pulseku {
   50% {
     opacity: 0.5;
@@ -37,7 +31,6 @@
 .animate-pulseku {
   animation: pulseku 0.5s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
-
 @keyframes bounceku {
   0%,
   100% {

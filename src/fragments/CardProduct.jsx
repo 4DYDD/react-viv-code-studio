@@ -2,11 +2,13 @@ import React from "react";
 
 import Button from "../elements/Button";
 
-function CardProduct({ children }) {
+function CardProduct({ children, className }) {
   return (
     <>
-      <div className="flexc">
-        <div className="w-full max-w-sm p-5 bg-gray-700 border border-gray-700 rounded-lg shadow">
+      <div className={`flexc ${className}`}>
+        <div
+          className={`w-full max-w-sm p-5 bg-gray-700 border border-gray-700 rounded-lg shadow shadow-gray-500`}
+        >
           {children}
         </div>
       </div>

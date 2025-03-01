@@ -6,8 +6,9 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
 // import Web from "./Web.jsx";
 
-import Home from "./pages/Home";
+import HomePage from "./pages/Home";
 import Default from "./pages/Default";
+import ProductsPage from "./pages/products";
 import ErrorPage from "./pages/404";
 
 const routeDefault = {
@@ -15,16 +16,21 @@ const routeDefault = {
   element: <Default />,
   errorElement: <ErrorPage />,
 };
+
 const routeHome = {
   path: "/home",
-  element: <Home />,
+  element: <HomePage />,
 };
 
-const router = createBrowserRouter([routeDefault, routeHome]);
+const routeProducts = {
+  path: "/products",
+  element: <ProductsPage />,
+};
+
+const router = createBrowserRouter([routeDefault, routeHome, routeProducts]);
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
     <RouterProvider router={router} />
-    {/* <Web /> */}
   </StrictMode>
 );

@@ -40,12 +40,19 @@ CardProduct.Body = ({ children, title }) => {
   );
 };
 
-CardProduct.Footer = ({ price }) => {
+CardProduct.Footer = ({ value, handle, price }) => {
   return (
     <>
       <div className="mt-5 flexc !justify-between">
         <span className="text-xl font-bold text-white">{price}</span>
-        <Button className={`bg-blue-600`}>Add to Cart</Button>
+        <Button
+          onClick={(event) => {
+            handle.AddToCart(value);
+          }}
+          className={`bg-blue-600`}
+        >
+          Add to Cart
+        </Button>
       </div>
     </>
   );

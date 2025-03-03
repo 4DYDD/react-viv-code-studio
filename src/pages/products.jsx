@@ -51,36 +51,33 @@ function ProductsPage() {
     },
   ];
 
-  const [datas, setDatas] = useState([]);
+  const [datas, setDatas] = useState(myDatas);
+  const [cart, setCart] = useState({});
 
-  useEffect(() => {
-    setDatas(
-      JSON.parse(JSON.stringify(localStorage.getItem("datas"))) || myDatas
-    );
-  }, []);
+  // useEffect(() => {
+  //   setDatas(myDatas);
+  // }, []);
 
   const handle = {
     AddToCart: function (value) {
-      if (!localStorage.getItem("datas")) {
+      if (!localStorage.getItem("cart")) {
         localStorage.setItem(
-          "datas",
-          JSON.stringify([
-            {
-              id: value.id,
-              title: value.title,
-              price: value.price,
-            },
-          ])
+          "cart",
+          JSON.stringify({
+            id: value.id,
+            title: value.title,
+            price: value.price,
+          })
         );
 
-        setDatas(JSON.parse(JSON.stringify(localStorage.getItem("datas"))));
+        setCart(JSON.parse(localStorage.getItem("cart")));
       }
     },
     DeleteCartList: function (id) {
-      // const storageDatas = localStorage.getItem("datas")
-      const newDatas = datas.filter((valuenya) => valuenya.id !== id);
-      localStorage.removeItem("datas");
-      localStorage.setItem("datas", newDatas);
+      if (localStorage.getItem("cart")) {
+        localStorage.removeItem("cart");
+        setCart({});
+      }
     },
   };
 
@@ -130,26 +127,16 @@ function ProductsPage() {
         <div className="flex-col w-full my-10 text-center flexc">
           <div className="font-bold">Keranjangmu :</div>
           <div className="flexc w-1/2 !justify-between mt-3">
+            <div>{cart?.id || "kosong"}</div>
+            <div>{cart?.title || "kosong"}</div>
+            <div>{cart?.price || "kosong"}</div>
             <div>
-              {JSON.parse(JSON.stringify(localStorage.getItem("datas")))?.id ||
-                "kosong"}
-            </div>
-            <div>
-              {JSON.parse(JSON.stringify(localStorage.getItem("datas")))
-                ?.title || "kosong"}
-            </div>
-            <div>
-              {JSON.parse(JSON.stringify(localStorage.getItem("datas")))
-                ?.price || "kosong"}
-            </div>
-            <div>
-              {localStorage.getItem("datas") ? (
+              {localStorage.getItem("cart") ? (
                 <button
-                  onClick={handle.DeleteCartList(
-                    JSON.parse(JSON.stringify(localStorage.getItem("datas")))
-                      ?.id
-                  )}
-                  className="px-4 py-2 text-white bg-red-500 rounded-lg shadow"
+                  onClick={() => {
+                    handle.DeleteCartList(cart?.id);
+                  }}
+                  className="px-4 py-2 text-white scale-100 bg-red-500 rounded-lg shadow active:scale-95 transall"
                 >
                   hapus
                 </button>

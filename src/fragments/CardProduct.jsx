@@ -49,7 +49,7 @@ CardProduct.Footer = ({ value, handle, price }) => {
           onClick={(event) => {
             handle.AddToCart(value);
           }}
-          className={`bg-blue-600`}
+          className={`bg-blue-600 scale-100 active:scale-95 transall`}
         >
           Add to Cart
         </Button>

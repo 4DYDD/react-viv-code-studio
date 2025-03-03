@@ -1,5 +1,7 @@
 import React from "react";
 
+import toIndonesiaCurrency from "../utilities/toIndonesiaCurrency";
+
 import Button from "../elements/Button";
 
 function CardProduct({ children, className }) {
@@ -44,7 +46,9 @@ CardProduct.Footer = ({ value, handle, price }) => {
   return (
     <>
       <div className="mt-5 flexc !justify-between">
-        <span className="text-xl font-bold text-white">{price}</span>
+        <span className="text-xl font-bold text-white">
+          {toIndonesiaCurrency(price)}
+        </span>
         <Button
           onClick={(event) => {
             handle.AddToCart(value);

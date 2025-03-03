@@ -1,8 +1,10 @@
 import React, { Fragment, useEffect, useState } from "react";
+
 import shoes from "/images/shoes.jpg";
 
 import App from "../layouts/App";
 import CardProduct from "../fragments/CardProduct";
+import toIndonesiaCurrency from "../utilities/toIndonesiaCurrency";
 
 function ProductsPage() {
   //
@@ -21,7 +23,7 @@ function ProductsPage() {
                   lenore to both said sat said, the no fiend wandering on uncertain
                   from. I then and from the i guessing shrieked. The followed hopes i
                   my and i. Velvet soul shore as madam repeating.`,
-      price: "Rp 500.000",
+      price: 500000,
     },
     {
       id: 2,
@@ -34,7 +36,7 @@ function ProductsPage() {
                   lenore to both said sat said, the no fiend wandering on uncertain
                   from. I then and from the i guessing shrieked. The followed hopes i
                   my and i. Velvet soul shore as madam repeating.`,
-      price: "Rp 1.000.000",
+      price: 1000000,
     },
     {
       id: 3,
@@ -47,12 +49,18 @@ function ProductsPage() {
                   lenore to both said sat said, the no fiend wandering on uncertain
                   from. I then and from the i guessing shrieked. The followed hopes i
                   my and i. Velvet soul shore as madam repeating.`,
-      price: "Rp 100.000",
+      price: 100000,
     },
   ];
 
+  const findDatas = (id) => {
+    const imDatas = datas.slice();
+    const theDatas = imDatas.find((valuenya) => valuenya.id === id);
+    return theDatas;
+  };
+
   const [datas, setDatas] = useState(myDatas);
-  const [cart, setCart] = useState({});
+  const [cart, setCart] = useState([]);
 
   // useEffect(() => {
   //   setDatas(myDatas);
@@ -60,24 +68,57 @@ function ProductsPage() {
 
   const handle = {
     AddToCart: function (value) {
-      if (!localStorage.getItem("cart")) {
-        localStorage.setItem(
-          "cart",
-          JSON.stringify({
-            id: value.id,
-            title: value.title,
-            price: value.price,
-          })
-        );
+      // if (!localStorage.getItem("cart")) {
+      // localStorage.setItem(
+      //   "cart",
+      //   JSON.stringify({
+      //     id: value.id,
+      //     title: value.title,
+      //     price: value.price,
+      //   })
+      // );
 
-        setCart(JSON.parse(localStorage.getItem("cart")));
+      // setCart(JSON.parse(localStorage.getItem("cart")));
+      // }
+
+      const newCart = cart.slice();
+      const theDatas = findDatas(value.id);
+
+      if (cart.find((valuenya) => valuenya.id === theDatas.id)) {
+        const updatedCart = newCart.map((valuenya) => {
+          const newQuantity = valuenya.quantity + 1;
+          const newTotalPrice = theDatas.price * newQuantity;
+
+          return valuenya.id === theDatas.id
+            ? {
+                ...valuenya,
+                quantity: newQuantity,
+                totalPrice: newTotalPrice,
+              }
+            : valuenya;
+        });
+
+        setCart(updatedCart);
+      } else {
+        setCart([
+          {
+            id: theDatas.id,
+            quantity: 1,
+            totalPrice: theDatas.price,
+          },
+          ...cart,
+        ]);
       }
     },
     DeleteCartList: function (id) {
-      if (localStorage.getItem("cart")) {
-        localStorage.removeItem("cart");
-        setCart({});
-      }
+      // if (localStorage.getItem("cart")) {
+      //   localStorage.removeItem("cart");
+      //   setCart({});
+      // }
+
+      const newCart = cart.slice();
+      const updatedCart = newCart.filter((value) => value.id !== id);
+      setCart(updatedCart);
     },
   };
 
@@ -100,7 +141,7 @@ function ProductsPage() {
                 <CardProduct.Header image={image.url} alt={image.name} />
                 <CardProduct.Body title={title}>{description}</CardProduct.Body>
                 <CardProduct.Footer
-                  value={{ id, title, price }}
+                  value={{ id }}
                   handle={handle}
                   price={price}
                 />
@@ -125,26 +166,47 @@ function ProductsPage() {
         {/*  */}
 
         <div className="flex-col w-full my-10 text-center flexc">
-          <div className="font-bold">Keranjangmu :</div>
-          <div className="flexc w-1/2 !justify-between mt-3">
-            <div>{cart?.id || "kosong"}</div>
-            <div>{cart?.title || "kosong"}</div>
-            <div>{cart?.price || "kosong"}</div>
-            <div>
-              {localStorage.getItem("cart") ? (
-                <button
-                  onClick={() => {
-                    handle.DeleteCartList(cart?.id);
-                  }}
-                  className="px-4 py-2 text-white scale-100 bg-red-500 rounded-lg shadow active:scale-95 transall"
-                >
-                  hapus
-                </button>
-              ) : (
-                "kosong"
-              )}
-            </div>
-          </div>
+          <table className="border-separate table-auto border-spacing-0.5 bg-slate-600 rounded-lg shadow shadow-gray-400">
+            <thead className="[&>th]:bg-slate-400 [&>th]:px-5 [&>th]:py-2">
+              <th className="rounded-tl-md">Product ID</th>
+              <th>Product Name</th>
+              <th>Price</th>
+              <th>Quantity</th>
+              <th>Total</th>
+              <th className="bg-red-500 rounded-tr-md">Opsi</th>
+            </thead>
+            <tbody className="bg-white">
+              {cart.map((value, index) => {
+                const theDatas = findDatas(value.id);
+                return (
+                  <tr
+                    key={index}
+                    className="text-slate-500 [&>td]:px-5 [&>td]:py-1.5"
+                  >
+                    <td>{value.id}</td>
+                    <td className="text-left">{theDatas.title}</td>
+                    <td className="text-left">
+                      {toIndonesiaCurrency(theDatas.price)}
+                    </td>
+                    <td>{value.quantity}</td>
+                    <td className="text-left">
+                      {toIndonesiaCurrency(value.totalPrice)}
+                    </td>
+                    <td>
+                      <button
+                        onClick={() => {
+                          handle.DeleteCartList(value.id);
+                        }}
+                        className="px-4 py-2 text-white scale-100 bg-red-500 rounded-lg shadow transall active:scale-95"
+                      >
+                        Delete
+                      </button>
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
         </div>
       </App>
     </>

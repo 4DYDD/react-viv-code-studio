@@ -62,9 +62,15 @@ function ProductsPage() {
   const [datas, setDatas] = useState(myDatas);
   const [cart, setCart] = useState([]);
 
-  // useEffect(() => {
-  //   setDatas(myDatas);
-  // }, []);
+  useEffect(() => {
+    setCart(JSON.parse(localStorage.getItem("cart")) || []);
+  }, []);
+
+  useEffect(() => {
+    if (cart.length > 0) {
+      localStorage.setItem("cart", JSON.stringify(cart));
+    }
+  }, [cart]);
 
   const handle = {
     AddToCart: function (value) {
@@ -119,6 +125,10 @@ function ProductsPage() {
       const newCart = cart.slice();
       const updatedCart = newCart.filter((value) => value.id !== id);
       setCart(updatedCart);
+
+      if (updatedCart.length < 1) {
+        localStorage.removeItem("cart");
+      }
     },
   };
 

@@ -10,6 +10,7 @@ import HomePage from "./pages/Home";
 import Default from "./pages/Default";
 import ProductsPage from "./pages/products";
 import ErrorPage from "./pages/404";
+import Testbutton from "./pages/testbutton";
 
 const routeDefault = {
   path: "/",
@@ -27,7 +28,17 @@ const routeProducts = {
   element: <ProductsPage />,
 };
 
-const router = createBrowserRouter([routeDefault, routeHome, routeProducts]);
+const routeTestButton = {
+  path: "/testbutton",
+  element: <Testbutton />,
+};
+
+const router = createBrowserRouter([
+  routeDefault,
+  routeHome,
+  routeProducts,
+  routeTestButton,
+]);
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>

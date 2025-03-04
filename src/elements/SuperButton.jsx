@@ -1,0 +1,175 @@
+import React, { useState, useRef, useEffect } from "react";
+
+function SuperButton({
+  theRef,
+  buttonOpen,
+  buttonClose,
+  get = null,
+  clicked,
+  className,
+  children,
+  onPressed,
+}) {
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [isButtonDisabled, setIsButtonDisabled] = useState(false);
+
+  const [isStarted, setIsStarted] = useState(false);
+
+  const menuButton = useRef(null);
+
+  useEffect(() => {
+    if (get !== null)
+      get({
+        menuOpen,
+        setMenuOpen,
+        isButtonDisabled,
+        setIsButtonDisabled,
+        isStarted,
+        setIsStarted,
+        handleTouchLeave,
+        forceDisabled,
+        forceOpen,
+      });
+  }, [get]);
+
+  const changeButton = (theClass) => {
+    const refnya = theRef || menuButton;
+    if (menuOpen == false) {
+      refnya.current.classList.add(theClass);
+    } else {
+      refnya.current.classList.remove(theClass);
+    }
+  };
+
+  const animateStart = (ref) => {
+    ref.forEach((element) => {
+      element.classList.add("!scale-x-[0.90]");
+      element.classList.add("!scale-y-95");
+    });
+  };
+
+  const animateGoing = (ref) => {
+    ref.forEach((element) => {
+      element.classList.remove("!scale-x-[0.90]");
+      element.classList.remove("!scale-y-95");
+
+      element.classList.add("animate-squish");
+    });
+  };
+
+  const animateEnd = (ref) => {
+    ref.forEach((element) => {
+      element.classList.remove("animate-squish");
+    });
+  };
+
+  const handleTouchStart = (event, ref) => {
+    if (isButtonDisabled == true) return;
+
+    animateStart(ref);
+
+    setIsStarted(true);
+  };
+
+  const handleTouchLeave = (event, ref, delayClick, force, callback) => {
+    setTimeout(() => {
+      if (isButtonDisabled == true) return;
+      if (isStarted == false) return;
+
+      // setMenuOpen(false);
+
+      animateGoing(ref);
+
+      setIsStarted(false);
+      setIsButtonDisabled(true); // Set tombol disabled
+
+      setTimeout(() => {
+        animateEnd(ref);
+
+        callback && callback();
+
+        if (!force) {
+          setIsButtonDisabled(false); // Aktifkan tombol kembali
+        }
+      }, delayClick);
+    }, 100);
+  };
+
+  const handleTouchEnd = (event, ref, delayClick) => {
+    if (isButtonDisabled == true) return;
+    if (isStarted == false) return;
+
+    setMenuOpen(!menuOpen);
+
+    animateGoing(ref);
+
+    setIsStarted(false);
+    setIsButtonDisabled(true); // Set tombol disabled
+
+    if (clicked)
+      clicked({
+        menuOpen,
+        setMenuOpen,
+        isButtonDisabled,
+        setIsButtonDisabled,
+        isStarted,
+        setIsStarted,
+        changeButton,
+        forceDisabled,
+        forceOpen,
+      });
+
+    setTimeout(() => {
+      animateEnd(ref);
+
+      setIsButtonDisabled(false); // Aktifkan tombol kembali
+    }, delayClick);
+  };
+
+  return (
+    <>
+      {/* <div className="!-top-[50%] transcenter bg-primary text-white rounded-lg shadow w-[14rem] h-[3rem] flexc font-capriola">
+        {menuOpen == true ? (
+          <span>menu open</span>
+        ) : (
+          <span>menu tidak open</span>
+        )}
+      </div> */}
+      <button
+        ref={theRef || menuButton}
+        onPointerDown={(event) => {
+          handleTouchStart(event, [theRef?.current || menuButton.current]);
+        }}
+        onPointerLeave={(event) => {
+          handleTouchLeave(event, [theRef?.current || menuButton.current], 200);
+        }}
+        onPointerUp={(event) => {
+          handleTouchEnd(event, [theRef?.current || menuButton.current], 200);
+        }}
+        className={`relative flex-col overflow-hidden scale-x-100 scale-y-100 rounded-full shadow select-none shadow-primary text-light bg-primary size-48 flexc transall font-gagalin ${className}`}
+      >
+        {/* === TEXTNYA === */}
+        <div
+          className={`text-[5em] select-none rounded-full size-full flexc flex-col transcenter transall opacity-100 scale-100 ${
+            menuOpen && "!opacity-0 !scale-0"
+          }`}
+        >
+          {buttonOpen && buttonOpen}
+        </div>
+        {/* === TEXTNYA === */}
+        {children}
+        {/* === X NYA === */}
+        <div
+          className={`text-[5em] select-none transall rounded-full size-full flexc flex-col !ease-in-out transcenter opacity-0 scale-0 ${
+            menuOpen && "!scale-100 !opacity-100"
+          }`}
+        >
+          {buttonClose && buttonClose}
+        </div>
+        {/* === X NYA === */}
+      </button>
+    </>
+  );
+}
+
+export default SuperButton;

@@ -1,13 +1,13 @@
-import React from "react";
+import React, { forwardRef } from "react";
 
 import toIndonesiaCurrency from "../utilities/toIndonesiaCurrency";
 
 import Button from "../elements/Button";
 
-function CardProduct({ children, className }) {
+const CardProduct = forwardRef(({ children, className }, ref) => {
   return (
     <>
-      <div className={`flexc ${className}`}>
+      <div ref={ref} className={`flexc ${className}`}>
         <div
           className={`w-full max-w-sm p-5 bg-gray-700 border border-gray-700 rounded-lg shadow shadow-gray-500`}
         >
@@ -16,7 +16,7 @@ function CardProduct({ children, className }) {
       </div>
     </>
   );
-}
+});
 
 CardProduct.Header = ({ image, alt }) => {
   return (

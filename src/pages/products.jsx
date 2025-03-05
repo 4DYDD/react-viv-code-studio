@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useState } from "react";
+import React, { Fragment, useEffect, useRef, useState } from "react";
 
 import shoes from "/images/shoes.jpg";
 
@@ -24,6 +24,7 @@ function ProductsPage() {
                   from. I then and from the i guessing shrieked. The followed hopes i
                   my and i. Velvet soul shore as madam repeating.`,
       price: 500000,
+      theRef: useRef(null),
     },
     {
       id: 2,
@@ -37,6 +38,7 @@ function ProductsPage() {
                   from. I then and from the i guessing shrieked. The followed hopes i
                   my and i. Velvet soul shore as madam repeating.`,
       price: 1000000,
+      theRef: useRef(null),
     },
     {
       id: 3,
@@ -50,6 +52,7 @@ function ProductsPage() {
                   from. I then and from the i guessing shrieked. The followed hopes i
                   my and i. Velvet soul shore as madam repeating.`,
       price: 100000,
+      theRef: useRef(null),
     },
   ];
 
@@ -141,27 +144,41 @@ function ProductsPage() {
         <div className="grid w-full grid-cols-1 gap-4 bg-red-500 lg:grid-cols-3 md:grid-cols-2">
           {/*  */}
 
-          {datas.map(({ id, image, title, description, price }, index) => (
-            <Fragment key={index}>
-              <CardProduct className={`my-5`}>
-                {/*  */}
-                {/*  */}
-                {/*  */}
+          {datas.map(
+            ({ id, image, title, description, price, theRef }, index) => {
+              theRef.current?.classList.add("animate-squish-barbar");
 
-                <CardProduct.Header image={image.url} alt={image.name} />
-                <CardProduct.Body title={title}>{description}</CardProduct.Body>
-                <CardProduct.Footer
-                  value={{ id }}
-                  handle={handle}
-                  price={price}
-                />
+              if (theRef.current) {
+                setTimeout(() => {
+                  theRef.current?.classList.add("animate-squish-barbar");
+                }, 200);
+              }
 
-                {/*  */}
-                {/*  */}
-                {/*  */}
-              </CardProduct>
-            </Fragment>
-          ))}
+              return (
+                <Fragment key={index}>
+                  <CardProduct className={`my-5`} ref={theRef}>
+                    {/*  */}
+                    {/*  */}
+                    {/*  */}
+
+                    <CardProduct.Header image={image.url} alt={image.name} />
+                    <CardProduct.Body title={title}>
+                      {description}
+                    </CardProduct.Body>
+                    <CardProduct.Footer
+                      value={{ id }}
+                      handle={handle}
+                      price={price}
+                    />
+
+                    {/*  */}
+                    {/*  */}
+                    {/*  */}
+                  </CardProduct>
+                </Fragment>
+              );
+            }
+          )}
 
           {/*  */}
         </div>
@@ -177,13 +194,15 @@ function ProductsPage() {
 
         <div className="flex-col w-full my-10 text-center flexc">
           <table className="border-separate table-auto border-spacing-0.5 bg-slate-600 rounded-lg shadow shadow-gray-400">
-            <thead className="[&>th]:bg-slate-400 [&>th]:px-5 [&>th]:py-2">
-              <th className="rounded-tl-md">Product ID</th>
-              <th>Product Name</th>
-              <th>Price</th>
-              <th>Quantity</th>
-              <th>Total</th>
-              <th className="bg-red-500 rounded-tr-md">Opsi</th>
+            <thead className="[&_th]:bg-slate-400 [&_th]:px-5 [&_th]:py-2">
+              <tr>
+                <th className="rounded-tl-md">Product ID</th>
+                <th>Product Name</th>
+                <th>Price</th>
+                <th>Quantity</th>
+                <th>Total</th>
+                <th className="bg-red-500 rounded-tr-md">Opsi</th>
+              </tr>
             </thead>
             <tbody className="bg-white">
               {cart.map((value, index) => {

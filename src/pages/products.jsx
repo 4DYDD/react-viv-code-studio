@@ -5,6 +5,7 @@ import shoes from "/images/shoes.jpg";
 import App from "../layouts/App";
 import CardProduct from "../fragments/CardProduct";
 import toIndonesiaCurrency from "../utilities/toIndonesiaCurrency";
+import { getProducts } from "../services/product-service";
 
 function ProductsPage() {
   //
@@ -67,6 +68,15 @@ function ProductsPage() {
 
   useEffect(() => {
     setCart(JSON.parse(localStorage.getItem("cart")) || []);
+  }, []);
+
+  useEffect(() => {
+    return () => {
+      getProducts((data) => {
+        // console.log(JSON.parse(JSON.stringify(data)));
+        console.log({ id: 1, nama: "adit" });
+      });
+    };
   }, []);
 
   useEffect(() => {

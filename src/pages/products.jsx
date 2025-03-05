@@ -63,20 +63,40 @@ function ProductsPage() {
     return theDatas;
   };
 
+  const findProduct = (id) => {
+    const imProducts = products.slice();
+    const theProduct = imProducts.find((valuenya) => valuenya.id === id);
+    return theProduct;
+  };
+
+  const handleSetProducts = (datanya) => {
+    const newProducts = datanya.slice();
+
+    setProducts(newProducts);
+    setShowProducts(true);
+  };
+
   const [datas, setDatas] = useState(myDatas);
   const [cart, setCart] = useState([]);
+  const [products, setProducts] = useState([]);
+  const [showProducts, setShowProducts] = useState(false);
+
+  const haveProducts = products.length > 0;
+  const totalPrice = cart
+    .map((value) => value.totalPrice)
+    .reduce((prev, value) => prev + value, 0);
 
   useEffect(() => {
     setCart(JSON.parse(localStorage.getItem("cart")) || []);
   }, []);
 
   useEffect(() => {
-    return () => {
-      getProducts((data) => {
-        // console.log(JSON.parse(JSON.stringify(data)));
-        console.log({ id: 1, nama: "adit" });
-      });
-    };
+    getProducts((data) => {
+      console.log(JSON.parse(JSON.stringify(data)));
+      const datanya = JSON.parse(JSON.stringify(data));
+
+      handleSetProducts(datanya);
+    });
   }, []);
 
   useEffect(() => {
@@ -101,14 +121,16 @@ function ProductsPage() {
       // }
 
       const newCart = cart.slice();
-      const theDatas = findDatas(value.id);
+      // const theDatas = findDatas(value.id);
+      const theProduct = findProduct(value.id);
+      console.log(theProduct);
 
-      if (cart.find((valuenya) => valuenya.id === theDatas.id)) {
+      if (cart.find((valuenya) => valuenya.id === theProduct.id)) {
         const updatedCart = newCart.map((valuenya) => {
           const newQuantity = valuenya.quantity + 1;
-          const newTotalPrice = theDatas.price * newQuantity;
+          const newTotalPrice = theProduct.price * newQuantity;
 
-          return valuenya.id === theDatas.id
+          return valuenya.id === theProduct.id
             ? {
                 ...valuenya,
                 quantity: newQuantity,
@@ -121,9 +143,9 @@ function ProductsPage() {
       } else {
         setCart([
           {
-            id: theDatas.id,
+            id: theProduct.id,
             quantity: 1,
-            totalPrice: theDatas.price,
+            totalPrice: theProduct.price,
           },
           ...cart,
         ]);
@@ -151,27 +173,20 @@ function ProductsPage() {
   return (
     <>
       <App className={`min-h-screen`}>
-        <div className="grid w-full grid-cols-1 gap-4 bg-red-500 lg:grid-cols-3 md:grid-cols-2">
+        <div className="grid w-full grid-cols-1 gap-4 lg:grid-cols-3 md:grid-cols-2">
           {/*  */}
 
-          {datas.map(
-            ({ id, image, title, description, price, theRef }, index) => {
-              theRef.current?.classList.add("animate-squish-barbar");
-
-              if (theRef.current) {
-                setTimeout(() => {
-                  theRef.current?.classList.add("animate-squish-barbar");
-                }, 200);
-              }
-
+          {haveProducts &&
+            showProducts &&
+            products.map(({ id, image, title, description, price }, index) => {
               return (
                 <Fragment key={index}>
-                  <CardProduct className={`my-5`} ref={theRef}>
+                  <CardProduct className={`my-5`}>
                     {/*  */}
                     {/*  */}
                     {/*  */}
 
-                    <CardProduct.Header image={image.url} alt={image.name} />
+                    <CardProduct.Header image={image} alt={`gambarnya`} />
                     <CardProduct.Body title={title}>
                       {description}
                     </CardProduct.Body>
@@ -187,8 +202,7 @@ function ProductsPage() {
                   </CardProduct>
                 </Fragment>
               );
-            }
-          )}
+            })}
 
           {/*  */}
         </div>
@@ -215,35 +229,42 @@ function ProductsPage() {
               </tr>
             </thead>
             <tbody className="bg-white">
-              {cart.map((value, index) => {
-                const theDatas = findDatas(value.id);
-                return (
-                  <tr
-                    key={index}
-                    className="text-slate-500 [&>td]:px-5 [&>td]:py-1.5"
-                  >
-                    <td>{value.id}</td>
-                    <td className="text-left">{theDatas.title}</td>
-                    <td className="text-left">
-                      {toIndonesiaCurrency(theDatas.price)}
-                    </td>
-                    <td>{value.quantity}</td>
-                    <td className="text-left">
-                      {toIndonesiaCurrency(value.totalPrice)}
-                    </td>
-                    <td>
-                      <button
-                        onClick={() => {
-                          handle.DeleteCartList(value.id);
-                        }}
-                        className="px-4 py-2 text-white scale-100 bg-red-500 rounded-lg shadow transall active:scale-95"
-                      >
-                        Delete
-                      </button>
-                    </td>
-                  </tr>
-                );
-              })}
+              {cart.length > 0 &&
+                cart.map((value, index) => {
+                  const theProduct = findProduct(value.id);
+                  return (
+                    <tr
+                      key={index}
+                      className="text-slate-500 [&>td]:px-5 [&>td]:py-1.5"
+                    >
+                      <td>{value.id}</td>
+                      <td className="text-left">
+                        {theProduct?.title.substring(0, 20)}
+                      </td>
+                      <td className="text-left">
+                        {toIndonesiaCurrency(theProduct?.price, "usd")}
+                      </td>
+                      <td>{value.quantity}</td>
+                      <td className="text-left">
+                        {toIndonesiaCurrency(value.totalPrice, "usd")}
+                      </td>
+                      <td>
+                        <button
+                          onClick={() => {
+                            handle.DeleteCartList(value.id);
+                          }}
+                          className="px-4 py-2 text-white scale-100 bg-red-500 rounded-lg shadow transall active:scale-95"
+                        >
+                          Delete
+                        </button>
+                      </td>
+                    </tr>
+                  );
+                })}
+              <tr>
+                <td colSpan={2}>Total Price</td>
+                <td colSpan={4}>{toIndonesiaCurrency(totalPrice, "usd")}</td>
+              </tr>
             </tbody>
           </table>
         </div>

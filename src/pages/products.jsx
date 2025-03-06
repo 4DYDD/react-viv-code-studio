@@ -70,7 +70,8 @@ function ProductsPage() {
   };
 
   const handleSetProducts = (datanya) => {
-    const newProducts = datanya.slice();
+    let newProducts = datanya.slice();
+    newProducts = newProducts.filter((value, index) => index < 6);
 
     setProducts(newProducts);
     setShowProducts(true);
@@ -107,21 +108,7 @@ function ProductsPage() {
 
   const handle = {
     AddToCart: function (value) {
-      // if (!localStorage.getItem("cart")) {
-      // localStorage.setItem(
-      //   "cart",
-      //   JSON.stringify({
-      //     id: value.id,
-      //     title: value.title,
-      //     price: value.price,
-      //   })
-      // );
-
-      // setCart(JSON.parse(localStorage.getItem("cart")));
-      // }
-
       const newCart = cart.slice();
-      // const theDatas = findDatas(value.id);
       const theProduct = findProduct(value.id);
       console.log(theProduct);
 
@@ -152,11 +139,6 @@ function ProductsPage() {
       }
     },
     DeleteCartList: function (id) {
-      // if (localStorage.getItem("cart")) {
-      //   localStorage.removeItem("cart");
-      //   setCart({});
-      // }
-
       const newCart = cart.slice();
       const updatedCart = newCart.filter((value) => value.id !== id);
       setCart(updatedCart);
@@ -173,7 +155,7 @@ function ProductsPage() {
   return (
     <>
       <App className={`min-h-screen`}>
-        <div className="grid w-full grid-cols-1 gap-4 lg:grid-cols-3 md:grid-cols-2">
+        <div className="grid w-full grid-cols-1 gap`-4 lg:grid-cols-3 md:grid-cols-2">
           {/*  */}
 
           {haveProducts &&
@@ -261,7 +243,7 @@ function ProductsPage() {
                     </tr>
                   );
                 })}
-              <tr>
+              <tr className="px-5 [&>td]:py-2 bg-slate-400">
                 <td colSpan={2}>Total Price</td>
                 <td colSpan={4}>{toIndonesiaCurrency(totalPrice, "usd")}</td>
               </tr>

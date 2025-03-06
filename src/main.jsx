@@ -11,6 +11,7 @@ import Default from "./pages/Default";
 import ProductsPage from "./pages/products";
 import ErrorPage from "./pages/404";
 import Testbutton from "./pages/testbutton";
+import ProfilePage from "./pages/profile";
 import LoginPage from "./pages/login";
 
 const routeDefault = {
@@ -34,6 +35,11 @@ const routeTestButton = {
   element: <Testbutton />,
 };
 
+const routeProfile = {
+  path: "/profilePage",
+  element: <ProfilePage />,
+};
+
 const routeLogin = {
   path: "/loginPage",
   element: <LoginPage />,
@@ -44,6 +50,7 @@ const router = createBrowserRouter([
   routeHome,
   routeProducts,
   routeTestButton,
+  routeProfile,
   routeLogin,
 ]);
 

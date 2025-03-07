@@ -4,7 +4,8 @@ import { getDetailProduct } from "../services/product-service";
 import App from "../layouts/App";
 import toIndonesiaCurrency from "../utilities/toIndonesiaCurrency";
 import Button from "../elements/Button";
-import Rating from "react-rating";
+// import Rating from "react-rating";
+import CustomRating from "../elements/CustomRating";
 
 function detailProductPage() {
   const { id } = useParams();
@@ -13,9 +14,8 @@ function detailProductPage() {
   useEffect(() => {
     getDetailProduct(id, (data) => {
       setProduct(data);
-      console.log(data);
     });
-  }, [id]);
+  }, []);
 
   return (
     <>
@@ -47,16 +47,10 @@ function detailProductPage() {
                   {product.description}
                 </div>
                 <div className="mt-2 mb-5 flexc !justify-start gap-2">
-                  <Rating
+                  <CustomRating
+                    rating={product.rating.rate}
+                    totalStars={5}
                     className="text-[1.5rem] text-yellow-500"
-                    start={0}
-                    stop={5}
-                    initialRating={product.rating.rate}
-                    readonly
-                    emptySymbol={<i class="fa-regular fa-star"></i>}
-                    fullSymbol={[1, 2, 3, 4, 5].map(() => (
-                      <i class="fa-solid fa-star"></i>
-                    ))}
                   />
                   <span className="text-slate-400">
                     {product.rating.rate} / 5.0 {`(${product.rating.count})`}
@@ -67,11 +61,11 @@ function detailProductPage() {
                   <Button
                     className={`text-[1.1rem] px-5 bg-blue-500 shadow shadow-gray-400 gap-3 flexc`}
                   >
-                    <i class="fa-solid fa-cart-arrow-down"></i>
+                    <i className="fa-solid fa-cart-arrow-down"></i>
                     <span>Buy Now</span>
                   </Button>
                   <Button
-                    className={`text-[1.1rem] px-5 bg-white text-blue-500 shadow shadow-gray-400 border border-gray-300 gap-3 flexc`}
+                    className={`text-[1.1rem] px-5 bg-white !text-blue-500 shadow shadow-gray-400 border border-gray-300 gap-3 flexc`}
                   >
                     <i className="fa-solid fa-cart-plus"></i>
                     <span>Add to Cart</span>

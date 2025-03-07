@@ -81,7 +81,6 @@ function ProductsPage() {
     AddToCart: function (value) {
       const newCart = cart.slice();
       const theProduct = findProduct(value.id);
-      console.log(theProduct);
 
       if (cart.find((valuenya) => valuenya.id === theProduct.id)) {
         const updatedCart = newCart.map((valuenya) => {

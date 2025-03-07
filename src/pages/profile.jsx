@@ -5,7 +5,7 @@ function profilePage() {
   return (
     <>
       <App className={`min-h-screen`}>
-        <div>profile guwehhh</div>
+        <div>profile guwehhh lagi</div>
       </App>
     </>
   );

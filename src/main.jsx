@@ -9,6 +9,7 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import HomePage from "./pages/Home";
 import Default from "./pages/Default";
 import ProductsPage from "./pages/products";
+import DetailProductPage from "./pages/detailProduct";
 import ErrorPage from "./pages/404";
 import Testbutton from "./pages/testbutton";
 import ProfilePage from "./pages/profile";
@@ -30,6 +31,11 @@ const routeProducts = {
   element: <ProductsPage />,
 };
 
+const routeDetailProduct = {
+  path: "/product/:id",
+  element: <DetailProductPage />,
+};
+
 const routeTestButton = {
   path: "/testbutton",
   element: <Testbutton />,
@@ -49,6 +55,7 @@ const router = createBrowserRouter([
   routeDefault,
   routeHome,
   routeProducts,
+  routeDetailProduct,
   routeTestButton,
   routeProfile,
   routeLogin,

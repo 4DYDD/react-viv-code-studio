@@ -74,37 +74,8 @@ function ProductsPage() {
     newProducts = newProducts.filter((value, index) => index < 6);
 
     setProducts(newProducts);
-    setShowProducts(true);
+    localStorage.setItem("products", JSON.stringify(newProducts));
   };
-
-  const [datas, setDatas] = useState(myDatas);
-  const [cart, setCart] = useState([]);
-  const [products, setProducts] = useState([]);
-  const [showProducts, setShowProducts] = useState(false);
-
-  const haveProducts = products.length > 0;
-  const totalPrice = cart
-    .map((value) => value.totalPrice)
-    .reduce((prev, value) => prev + value, 0);
-
-  useEffect(() => {
-    setCart(JSON.parse(localStorage.getItem("cart")) || []);
-  }, []);
-
-  useEffect(() => {
-    getProducts((data) => {
-      console.log(JSON.parse(JSON.stringify(data)));
-      const datanya = JSON.parse(JSON.stringify(data));
-
-      handleSetProducts(datanya);
-    });
-  }, []);
-
-  useEffect(() => {
-    if (cart.length > 0) {
-      localStorage.setItem("cart", JSON.stringify(cart));
-    }
-  }, [cart]);
 
   const handle = {
     AddToCart: function (value) {
@@ -149,26 +120,63 @@ function ProductsPage() {
     },
   };
 
+  const [datas, setDatas] = useState(myDatas);
+  const [cart, setCart] = useState([]);
+  const [products, setProducts] = useState([]);
+
+  const haveCart = cart.length > 0;
+  const haveProducts = products.length > 0;
+
+  const totalPrice = cart
+    .map((value) => value.totalPrice)
+    .reduce((prev, value) => prev + value, 0);
+
+  useEffect(() => {
+    setCart(JSON.parse(localStorage.getItem("cart")) || []);
+  }, []);
+
+  useEffect(() => {
+    if (!localStorage.getItem("products")) {
+      getProducts((data) => {
+        console.log(JSON.parse(JSON.stringify(data)));
+        const datanya = JSON.parse(JSON.stringify(data));
+
+        handleSetProducts(datanya);
+      });
+    } else {
+      setProducts(JSON.parse(localStorage.getItem("products")));
+    }
+  }, []);
+
+  useEffect(() => {
+    if (cart.length > 0) {
+      localStorage.setItem("cart", JSON.stringify(cart));
+    }
+  }, [cart]);
+
   //
   //
   //
   return (
     <>
-      <App className={`min-h-screen`}>
-        <div className="grid w-full grid-cols-1 gap`-4 lg:grid-cols-3 md:grid-cols-2">
+      <App className={`min-h-screen pt-24 pb-12`}>
+        <div className="grid w-full grid-cols-1 gap-4 lg:w-[65%] lg:grid-cols-3 md:grid-cols-2">
           {/*  */}
 
           {haveProducts &&
-            showProducts &&
             products.map(({ id, image, title, description, price }, index) => {
               return (
                 <Fragment key={index}>
-                  <CardProduct className={`my-5`}>
+                  <CardProduct className={`my-2`}>
                     {/*  */}
                     {/*  */}
                     {/*  */}
 
-                    <CardProduct.Header image={image} alt={`gambarnya`} />
+                    <CardProduct.Header
+                      image={image}
+                      alt={`gambarnya`}
+                      id={id}
+                    />
                     <CardProduct.Body title={title}>
                       {description}
                     </CardProduct.Body>
@@ -188,31 +196,28 @@ function ProductsPage() {
 
           {/*  */}
         </div>
-
+        {/*  */}
+        {/*  */}
+        {/*  */}
+        {/*  */}
         {/*  */}
         {/*  */}
 
-        {/*  */}
-        {/*  */}
-
-        {/*  */}
-        {/*  */}
-
-        <div className="flex-col w-full my-10 text-center flexc">
-          <table className="border-separate table-auto border-spacing-0.5 bg-slate-600 rounded-lg shadow shadow-gray-400">
-            <thead className="[&_th]:bg-slate-400 [&_th]:px-5 [&_th]:py-2">
-              <tr>
-                <th className="rounded-tl-md">Product ID</th>
-                <th>Product Name</th>
-                <th>Price</th>
-                <th>Quantity</th>
-                <th>Total</th>
-                <th className="bg-red-500 rounded-tr-md">Opsi</th>
-              </tr>
-            </thead>
-            <tbody className="bg-white">
-              {cart.length > 0 &&
-                cart.map((value, index) => {
+        {haveCart && (
+          <div className="flex-col w-full my-10 text-center flexc">
+            <table className="border-separate table-auto border-spacing-0.5 bg-slate-600 rounded-lg shadow shadow-gray-400">
+              <thead className="[&_th]:bg-slate-400 [&_th]:px-5 [&_th]:py-2">
+                <tr>
+                  <th className="rounded-tl-md">Product ID</th>
+                  <th>Product Name</th>
+                  <th>Price</th>
+                  <th>Quantity</th>
+                  <th>Total</th>
+                  <th className="bg-red-500 rounded-tr-md">Opsi</th>
+                </tr>
+              </thead>
+              <tbody className="bg-white">
+                {cart.map((value, index) => {
                   const theProduct = findProduct(value.id);
                   return (
                     <tr
@@ -243,13 +248,14 @@ function ProductsPage() {
                     </tr>
                   );
                 })}
-              <tr className="px-5 [&>td]:py-2 bg-slate-400">
-                <td colSpan={2}>Total Price</td>
-                <td colSpan={4}>{toIndonesiaCurrency(totalPrice, "usd")}</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
+                <tr className="px-5 [&>td]:py-2 bg-slate-400">
+                  <td colSpan={2}>Total Price</td>
+                  <td colSpan={4}>{toIndonesiaCurrency(totalPrice, "usd")}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        )}
       </App>
     </>
   );

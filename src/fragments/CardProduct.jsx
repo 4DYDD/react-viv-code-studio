@@ -3,6 +3,7 @@ import React, { useEffect, useRef } from "react";
 import toIndonesiaCurrency from "../utilities/toIndonesiaCurrency";
 
 import Button from "../elements/Button";
+import { Link } from "react-router-dom";
 
 const CardProduct = ({ children, className }) => {
   const theRef = useRef(null);
@@ -32,15 +33,15 @@ const CardProduct = ({ children, className }) => {
   );
 };
 
-CardProduct.Header = ({ image, alt }) => {
+CardProduct.Header = ({ image, alt, id }) => {
   return (
     <>
-      <a
-        href="#"
+      <Link
+        to={`/product/${id}`}
         className="p-5 !overflow-hidden rounded-t-lg flexc h-48 bg-white w-80 mx-auto relative"
       >
         <img src={image} alt={alt} className="w-1/2 transcenter" />
-      </a>
+      </Link>
     </>
   );
 };
@@ -52,8 +53,8 @@ CardProduct.Body = ({ children, title }) => {
           <h5 className="text-xl font-semibold tracking-tight text-white">
             {title.substring(0, 20)}
           </h5>
-          <p className="mt-1 text-sm text-white">
-            {children.substring(0, 100)}
+          <p className="mt-1 text-sm text-white h-[4rem]">
+            {children.substring(0, 100)}...
           </p>
         </a>
       </div>

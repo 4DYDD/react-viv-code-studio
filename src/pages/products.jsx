@@ -6,68 +6,64 @@ import App from "../layouts/App";
 import CardProduct from "../fragments/CardProduct";
 import toIndonesiaCurrency from "../utilities/toIndonesiaCurrency";
 import { getProducts } from "../services/product-service";
+import TableCart from "../fragments/TableCart";
+import { useSelector } from "react-redux";
 
 function ProductsPage() {
   //
   //
   //
 
-  const myDatas = [
-    {
-      id: 1,
-      image: {
-        url: shoes,
-        name: "Sepatu",
-      },
-      title: "Sepatu Lama",
-      description: `Still me nevermore the scarce raven if entrance what, then. Shall
-                  lenore to both said sat said, the no fiend wandering on uncertain
-                  from. I then and from the i guessing shrieked. The followed hopes i
-                  my and i. Velvet soul shore as madam repeating.`,
-      price: 500000,
-      theRef: useRef(null),
-    },
-    {
-      id: 2,
-      image: {
-        url: shoes,
-        name: "Sepatu",
-      },
-      title: "Sepatu Baru",
-      description: `Still me nevermore the scarce raven if entrance what, then. Shall
-                  lenore to both said sat said, the no fiend wandering on uncertain
-                  from. I then and from the i guessing shrieked. The followed hopes i
-                  my and i. Velvet soul shore as madam repeating.`,
-      price: 1000000,
-      theRef: useRef(null),
-    },
-    {
-      id: 3,
-      image: {
-        url: shoes,
-        name: "Sepatu",
-      },
-      title: "Sepatu Ajah",
-      description: `Still me nevermore the scarce raven if entrance what, then. Shall
-                  lenore to both said sat said, the no fiend wandering on uncertain
-                  from. I then and from the i guessing shrieked. The followed hopes i
-                  my and i. Velvet soul shore as madam repeating.`,
-      price: 100000,
-      theRef: useRef(null),
-    },
-  ];
+  // const myDatas = [
+  //   {
+  //     id: 1,
+  //     image: {
+  //       url: shoes,
+  //       name: "Sepatu",
+  //     },
+  //     title: "Sepatu Lama",
+  //     description: `Still me nevermore the scarce raven if entrance what, then. Shall
+  //                 lenore to both said sat said, the no fiend wandering on uncertain
+  //                 from. I then and from the i guessing shrieked. The followed hopes i
+  //                 my and i. Velvet soul shore as madam repeating.`,
+  //     price: 500000,
+  //     theRef: useRef(null),
+  //   },
+  //   {
+  //     id: 2,
+  //     image: {
+  //       url: shoes,
+  //       name: "Sepatu",
+  //     },
+  //     title: "Sepatu Baru",
+  //     description: `Still me nevermore the scarce raven if entrance what, then. Shall
+  //                 lenore to both said sat said, the no fiend wandering on uncertain
+  //                 from. I then and from the i guessing shrieked. The followed hopes i
+  //                 my and i. Velvet soul shore as madam repeating.`,
+  //     price: 1000000,
+  //     theRef: useRef(null),
+  //   },
+  //   {
+  //     id: 3,
+  //     image: {
+  //       url: shoes,
+  //       name: "Sepatu",
+  //     },
+  //     title: "Sepatu Ajah",
+  //     description: `Still me nevermore the scarce raven if entrance what, then. Shall
+  //                 lenore to both said sat said, the no fiend wandering on uncertain
+  //                 from. I then and from the i guessing shrieked. The followed hopes i
+  //                 my and i. Velvet soul shore as madam repeating.`,
+  //     price: 100000,
+  //     theRef: useRef(null),
+  //   },
+  // ];
 
-  const findDatas = (id) => {
-    const imDatas = datas.slice();
-    const theDatas = imDatas.find((valuenya) => valuenya.id === id);
-    return theDatas;
-  };
-
-  const findProduct = (id) => {
-    const imProducts = products.slice();
-    const theProduct = imProducts.find((valuenya) => valuenya.id === id);
-    return theProduct;
-  };
+  // const findDatas = (id) => {
+  //   const imDatas = datas.slice();
+  //   const theDatas = imDatas.find((valuenya) => valuenya.id === id);
+  //   return theDatas;
+  // };
 
   const handleSetProducts = (datanya) => {
     let newProducts = datanya.slice();
@@ -80,7 +76,7 @@ function ProductsPage() {
   const handle = {
     AddToCart: function (value) {
       const newCart = cart.slice();
-      const theProduct = findProduct(value.id);
+      const theProduct = findProduct(products, value.id);
 
       if (cart.find((valuenya) => valuenya.id === theProduct.id)) {
         const updatedCart = newCart.map((valuenya) => {
@@ -119,8 +115,10 @@ function ProductsPage() {
     },
   };
 
-  const [datas, setDatas] = useState(myDatas);
-  const [cart, setCart] = useState([]);
+  // const [datas, setDatas] = useState(myDatas);
+  // const [cart, setCart] = useState([]);
+
+  const cart = useSelector((state) => state.cart.data);
   const [products, setProducts] = useState([]);
 
   const haveCart = cart.length > 0;
@@ -130,9 +128,9 @@ function ProductsPage() {
     .map((value) => value.totalPrice)
     .reduce((prev, value) => prev + value, 0);
 
-  useEffect(() => {
-    setCart(JSON.parse(localStorage.getItem("cart")) || []);
-  }, []);
+  // useEffect(() => {
+  //   setCart(JSON.parse(localStorage.getItem("cart")) || []);
+  // }, []);
 
   useEffect(() => {
     if (!localStorage.getItem("products")) {
@@ -179,11 +177,7 @@ function ProductsPage() {
                     <CardProduct.Body title={title}>
                       {description}
                     </CardProduct.Body>
-                    <CardProduct.Footer
-                      value={{ id }}
-                      handle={handle}
-                      price={price}
-                    />
+                    <CardProduct.Footer id={id} handle={handle} price={price} />
 
                     {/*  */}
                     {/*  */}
@@ -202,59 +196,7 @@ function ProductsPage() {
         {/*  */}
         {/*  */}
 
-        {haveCart && (
-          <div className="flex-col w-full my-10 text-center flexc">
-            <table className="border-separate table-auto border-spacing-0.5 bg-slate-600 rounded-lg shadow shadow-gray-400">
-              <thead className="[&_th]:bg-slate-400 [&_th]:px-5 [&_th]:py-2">
-                <tr>
-                  <th className="rounded-tl-md">Product ID</th>
-                  <th>Product Name</th>
-                  <th>Price</th>
-                  <th>Quantity</th>
-                  <th>Total</th>
-                  <th className="bg-red-500 rounded-tr-md">Opsi</th>
-                </tr>
-              </thead>
-              <tbody className="bg-white">
-                {cart.map((value, index) => {
-                  const theProduct = findProduct(value.id);
-                  return (
-                    <tr
-                      key={index}
-                      className="text-slate-500 [&>td]:px-5 [&>td]:py-1.5"
-                    >
-                      <td>{value.id}</td>
-                      <td className="text-left">
-                        {theProduct?.title.substring(0, 20)}
-                      </td>
-                      <td className="text-left">
-                        {toIndonesiaCurrency(theProduct?.price, "usd")}
-                      </td>
-                      <td>{value.quantity}</td>
-                      <td className="text-left">
-                        {toIndonesiaCurrency(value.totalPrice, "usd")}
-                      </td>
-                      <td>
-                        <button
-                          onClick={() => {
-                            handle.DeleteCartList(value.id);
-                          }}
-                          className="px-4 py-2 text-white scale-100 bg-red-500 rounded-lg shadow transall active:scale-95"
-                        >
-                          Delete
-                        </button>
-                      </td>
-                    </tr>
-                  );
-                })}
-                <tr className="px-5 [&>td]:py-2 bg-slate-400">
-                  <td colSpan={2}>Total Price</td>
-                  <td colSpan={4}>{toIndonesiaCurrency(totalPrice, "usd")}</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        )}
+        {haveCart && <TableCart products={products} handle={handle} />}
       </App>
     </>
   );

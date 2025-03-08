@@ -1,6 +1,8 @@
 import React, { useEffect, useRef } from "react";
+import { useDispatch } from "react-redux";
 
 import toIndonesiaCurrency from "../utilities/toIndonesiaCurrency";
+import { addToCart } from "../redux/slices/cartSlice";
 
 import Button from "../elements/Button";
 import { Link } from "react-router-dom";
@@ -45,6 +47,7 @@ CardProduct.Header = ({ image, alt, id }) => {
     </>
   );
 };
+
 CardProduct.Body = ({ children, title }) => {
   return (
     <>
@@ -62,7 +65,9 @@ CardProduct.Body = ({ children, title }) => {
   );
 };
 
-CardProduct.Footer = ({ value, handle, price }) => {
+CardProduct.Footer = ({ id, handle, price }) => {
+  const dispatch = useDispatch();
+
   return (
     <>
       <div className="mt-5 flexc !justify-between">
@@ -71,7 +76,8 @@ CardProduct.Footer = ({ value, handle, price }) => {
         </span>
         <Button
           onClick={(event) => {
-            handle.AddToCart(value);
+            // handle.AddToCart(id);
+            dispatch(addToCart({ id, quantity: 1, price }));
           }}
           className={`bg-blue-600 scale-100 active:scale-95 transall`}
         >

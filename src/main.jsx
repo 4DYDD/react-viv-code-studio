@@ -15,54 +15,23 @@ import Testbutton from "./pages/testbutton";
 import ProfilePage from "./pages/profile";
 import LoginPage from "./pages/login";
 
-const routeDefault = {
-  path: "/",
-  element: <Default />,
-  errorElement: <ErrorPage />,
-};
-
-const routeHome = {
-  path: "/home",
-  element: <HomePage />,
-};
-
-const routeProducts = {
-  path: "/products",
-  element: <ProductsPage />,
-};
-
-const routeDetailProduct = {
-  path: "/product/:id",
-  element: <DetailProductPage />,
-};
-
-const routeTestButton = {
-  path: "/testbutton",
-  element: <Testbutton />,
-};
-
-const routeProfile = {
-  path: "/profilePage",
-  element: <ProfilePage />,
-};
-
-const routeLogin = {
-  path: "/loginPage",
-  element: <LoginPage />,
-};
+import { Provider } from "react-redux";
+import store from "./redux/store";
 
 const router = createBrowserRouter([
-  routeDefault,
-  routeHome,
-  routeProducts,
-  routeDetailProduct,
-  routeTestButton,
-  routeProfile,
-  routeLogin,
+  { path: "/", element: <Default />, errorElement: <ErrorPage /> },
+  { path: "/home", element: <HomePage /> },
+  { path: "/products", element: <ProductsPage /> },
+  { path: "/product/:id", element: <DetailProductPage /> },
+  { path: "/testbutton", element: <Testbutton /> },
+  { path: "/profilePage", element: <ProfilePage /> },
+  { path: "/loginPage", element: <LoginPage /> },
 ]);
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
-    <RouterProvider router={router} />
+    <Provider store={store}>
+      <RouterProvider router={router} />
+    </Provider>
   </StrictMode>
 );

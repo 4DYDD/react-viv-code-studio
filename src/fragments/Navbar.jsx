@@ -1,15 +1,22 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext } from "react";
 import { Link } from "react-router-dom";
 
 import { getUsername, logout } from "../services/auth-service";
 import { useLogin } from "../hooks/useLogin";
+import { DarkMode } from "../context/DarkMode";
+import Button from "../elements/Button";
 
 function Navbar() {
   const token = useLogin();
+  const { isDarkMode, setIsDarkMode } = useContext(DarkMode);
 
   return (
     <>
-      <nav className="fixed top-0 z-20 w-full bg-white border-b border-gray-200 dark:bg-gray-900 start-0 dark:border-gray-600">
+      <nav
+        className={`fixed top-0 z-20 w-full  ${
+          isDarkMode ? "bg-gray-900" : "bg-gray-500"
+        } border-b border-gray-600 start-0`}
+      >
         <div className="flex flex-wrap items-center justify-between max-w-screen-xl p-4 mx-auto">
           <a
             href="#"
@@ -26,6 +33,25 @@ function Navbar() {
           </a>
           <div className="flex space-x-3 md:order-2 md:space-x-0 rtl:space-x-reverse">
             {/* NANTI BUAT KONDISI DISINI */}
+            {isDarkMode ? (
+              <Button
+                onClick={() => {
+                  setIsDarkMode(false);
+                }}
+                className="text-white bg-black me-5"
+              >
+                dark
+              </Button>
+            ) : (
+              <Button
+                onClick={() => {
+                  setIsDarkMode(true);
+                }}
+                className="text-black bg-white me-5"
+              >
+                light
+              </Button>
+            )}
             {token && (
               <>
                 <span className="mr-5 text-sm text-slate-400 flexc">
